@@ -18,7 +18,7 @@ RSpec.describe StaticpagesController, type: :controller do
     it "should allow me to post to create with predetermined data but also will run the scrapper (not job yet)" do
       post :create
       filing = Filing.last
-      expect(filing.total_rev).to eq(7202)
+      expect(filing.ticker).to eq("GE")
       expect(response).to redirect_to root_path
     end 
   end
