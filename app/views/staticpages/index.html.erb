@@ -1,14 +1,20 @@
 <h1>This is the frontpage</h1>
 <%= form_tag(staticpages_path,method:"post") do %>
-  <%= submit_tag("Press me to scrape") %>
+  <%= submit_tag("Press me to scrape", data: {behavior: "filing-speaker"}) %>
 <% end %>
 
 <% @filings.each do |f| %>
-  <div class="col-10 offset-1">
-    <%= f.name %>
-    <%= f.ticker %>
-    <%= f.year %>
-    <%= f.quarter %>
-    <%= f.total_rev %>
+  <div class="col-10 offset-1" id="_<%= f.id %>">
+    <h1 class="name"><%= f.name %></h1>
+    <h5 class="ticker"><%= f.ticker %></h5>
+    <h5 class="year"><%= f.year %></h5>
+    <h5 class="quarter"><%= f.quarter %></h5>
+    <h5 class="total_rev">
+      <% if f.total_rev == nil %>
+        working
+      <% else %>
+        <%= f.total_rev %>
+      <% end %>
+    </h5>
   </div>
 <% end %>

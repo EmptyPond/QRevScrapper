@@ -5,7 +5,7 @@ class StaticpagesController < ApplicationController
   end
 
   def create
-    total_rev = scrapper_int_val
+    #total_rev = scrapper_int_val
     Filing.create(name:"General Electric",ticker:"GE",year:2004,quarter:3)
     redirect_to root_path
   end
