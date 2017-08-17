@@ -2,7 +2,7 @@
 require 'nokogiri'
 require 'httparty'
 require 'json'
-require 'pry'
+#require 'pry'
 require 'csv'
 
 class Scrapper

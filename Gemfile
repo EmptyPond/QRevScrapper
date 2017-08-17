@@ -60,6 +60,12 @@ end
 
 gem 'simple_form'
 
+#for scrapper to work
+gem 'httparty'
+
+gem 'nokogiri'
+####end of scrapper gems
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.6'
   gem 'factory_girl_rails', '~> 4.0'

@@ -1,1 +1,14 @@
 <h1>This is the frontpage</h1>
+<%= form_tag(staticpages_path,method:"post") do %>
+  <%= submit_tag("Press me to scrape") %>
+<% end %>
+
+<% @filings.each do |f| %>
+  <div class="col-10 offset-1">
+    <%= f.name %>
+    <%= f.ticker %>
+    <%= f.year %>
+    <%= f.quarter %>
+    <%= f.total_rev %>
+  </div>
+<% end %>
