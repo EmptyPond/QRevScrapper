@@ -1,7 +1,14 @@
+<script>
+$(function () {
+  $(".scrape_btn").click(function() {
+    $.post('<%= staticpages_path %>',{},function() {
+    });
+  });
+});
+</script>
+
 <h1>This is the frontpage</h1>
-<%= form_tag(staticpages_path,method:"post") do %>
-  <%= submit_tag("Press me to scrape", data: {behavior: "filing-speaker"}) %>
-<% end %>
+<%= submit_tag("Press me to scrape",class:"scrape_btn",data: {behavior: "filing-speaker"}) %>
 
 <% @filings.each do |f| %>
   <div class="col-10 offset-1" id="_<%= f.id %>">
@@ -10,11 +17,8 @@
     <h5 class="year"><%= f.year %></h5>
     <h5 class="quarter"><%= f.quarter %></h5>
     <h5 class="total_rev">
-      <% if f.total_rev == nil %>
-        working
-      <% else %>
-        <%= f.total_rev %>
-      <% end %>
+      <% if f.total_rev == nil %>working<% end %>
+      <%= f.total_rev %>
     </h5>
   </div>
 <% end %>
