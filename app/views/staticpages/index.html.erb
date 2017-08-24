@@ -8,7 +8,16 @@ $(function () {
 </script>
 
 <h1>This is the frontpage</h1>
+
 <%= submit_tag("Press me to scrape",class:"scrape_btn",data: {behavior: "filing-speaker"}) %>
+
+<%= simple_form_for @new_filing,url:staticpages_path do |f| %>
+  <%= f.input :name %>
+  <%= f.input :year %>
+  <%= f.input :quarter %>
+  <%= f.submit "Press to scrape", class: "scrape_btn" %>
+<% end %>
+
 
 <% @filings.each do |f| %>
   <div class="col-10 offset-1" id="_<%= f.id %>">

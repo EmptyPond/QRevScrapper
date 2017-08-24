@@ -2,7 +2,7 @@
 require 'nokogiri'
 require 'httparty'
 require 'json'
-require 'pry'
+#require 'pry'
 require 'csv'
 
 class Scrapper
@@ -16,15 +16,21 @@ class Scrapper
     company_url = ""
     page = HTTParty.get("https://www.sec.gov/Archives/edgar/full-index/"+year+"/QTR"+quarter+"/form.idx")
     parse_page = Nokogiri::HTML(page).to_s.split(/\n/)
+
+    begin
     parse_page.each do |x|
       #need to change this to a regex of company nam
-      if x.match(/THQ\sINC/) != nil and x.match(/10-Q/) != nil
+      if x.match(Regexp.new(company)) != nil and x.match(/10-Q/) != nil
         company_url = x
       end
     end
     
     if company_url == ""
       raise "Company 10-Q cannot be found"
+    end
+
+    rescue
+      return "TotalAssets 999"
     end
 
     search_url = company_url.match(/edgar\/[a-z\/0-9\-\.]*/).to_s
@@ -62,6 +68,6 @@ class Scrapper
   end
 end
 
-s = Scrapper.new(year="2004",quarter="3",company="THQ INC").scrape
+#s = Scrapper.new(year="2004",quarter="2",company="THQ INC").scrape
 
 #Pry.start(binding)
