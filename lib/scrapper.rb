@@ -12,14 +12,17 @@ class Scrapper
     @quarter = quarter
     @company = company
   end
-  def scrape
-    company_url = ""
-    page = HTTParty.get("https://www.sec.gov/Archives/edgar/full-index/"+year+"/QTR"+quarter+"/form.idx")
+
+  def url_response_split(url)
+    page = HTTParty.get(url)
     parse_page = Nokogiri::HTML(page).to_s.split(/\n/)
+  end
+
+  def company_url_getter(parse_page)
+    company_url = ""
 
     begin
     parse_page.each do |x|
-      #need to change this to a regex of company nam
       if x.match(Regexp.new(company)) != nil and x.match(/10-Q/) != nil
         company_url = x
       end
@@ -30,25 +33,20 @@ class Scrapper
     end
 
     rescue
-      return "TotalAssets 999"
+      return nil
     end
+    return company_url
+  end
 
-    search_url = company_url.match(/edgar\/[a-z\/0-9\-\.]*/).to_s
-
-    page = HTTParty.get('https://www.sec.gov/Archives/' + search_url)
-
-    parse_page = Nokogiri::HTML(page)
-
-    thingy = parse_page.to_s.split(/\n/)
-
-    holding_thingy_array = []
+  def parse_html_struct(parse_page)
+    total_assets_array = []
     grabbed = false
 
-    thingy.each_with_index do |x,i|
+    parse_page.each_with_index do |x,i|
       if x.match(/TOTAL ASSETS/) != nil
-        thingy[i,thingy.length].each do |y|
+        parse_page[i,parse_page.length].each do |y|
           if y.match(/<\/tr>/) == nil
-            holding_thingy_array << y
+            total_assets_array << y
           else 
             grabbed = true
             break
@@ -60,14 +58,24 @@ class Scrapper
       end
     end
 
-    our_value = holding_thingy_array[18].match(/[0-9\,]*<\/font>/).to_s.split('<')[0]
+    our_value = total_assets_array[18].match(/[0-9\,]*<\/font>/).to_s.split('<')[0]
 
     our_value = "TotalAssets " + our_value
-    
-    return our_value
+  end
+
+  def scrape
+    url = "https://www.sec.gov/Archives/edgar/full-index/"+year+"/QTR"+quarter+"/form.idx"
+    parse_page = url_response_split(url)
+    company_url = company_url_getter(parse_page)
+    #need a more robust way to say can't find the form
+    if company_url == nil
+      return "TotalAssets 999"
+    end
+
+    search_url = 'https://www.sec.gov/Archives/' + company_url.match(/edgar\/[a-z\/0-9\-\.]*/).to_s
+    parse_page = url_response_split(search_url)
+    total_value = parse_html_struct(parse_page)
+
+    return total_value 
   end
 end
-
-#s = Scrapper.new(year="2004",quarter="2",company="THQ INC").scrape
-
-#Pry.start(binding)

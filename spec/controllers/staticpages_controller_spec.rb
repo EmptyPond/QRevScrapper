@@ -15,10 +15,10 @@ RSpec.describe StaticpagesController, type: :controller do
   end
 
   describe "staticpages#create" do
-    it "should allow me to post to create with predetermined data but also will run the scrapper (not job yet)" do
-      post :create
+    it "should allow me to post to create with predetermined data but also will run the scrapper" do
+      post :create, params: { filing: { name:"THQ INC",year:"2004",quarter:"3"}}
       filing = Filing.last
-      expect(filing.ticker).to eq("GE")
+      expect(filing.name).to eq("THQ INC")
       expect(response).to redirect_to root_path
     end 
   end
